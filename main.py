@@ -3,7 +3,7 @@ import pyray as rl
 def main():
     # Initialization
     screen_width, screen_height = 350, 350
-    rl.init_window(screen_width, screen_height, "Greedy Stop Watch")
+    rl.init_window(screen_width, screen_height, "Greedy Stopwatch")
 
     # Set window icon
     rl.set_window_icon(rl.load_image("static/icon.png"))
