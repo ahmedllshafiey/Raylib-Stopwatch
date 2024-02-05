@@ -1,1 +1,1 @@
-# Python GUI timer in Raylib
+# Python GUI stopwatch in Raylib
