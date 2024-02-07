@@ -1,5 +1,6 @@
 import pyray as rl
 import datetime
+import time
 
 def main():
     # Initialization
@@ -10,19 +11,19 @@ def main():
     rl.set_window_icon(rl.load_image("static/icon.png"))
 
     font_size = 100
-    elapsed_time = 0
+    start_time = time.time()
+    elapsed_time  = 0
     continue_timer = False
-    lap_num = 0
 
     Date = datetime.datetime.now().strftime("%c")
-    formatted_date = Date.replace(" ", "_").replace(":", "_")
+    formatted_date = Date.replace(" ", "-").replace(":", "-")
     file_path = f"./data/{formatted_date}.txt"
 
     try:
         # Try to open the file for writing
         with open(file_path, 'w') as file:
             # Perform operations on the file if needed
-            file.write("Time Laps")
+            file.write("")
             print(f"File '{file_path}' created successfully.")
 
     except FileExistsError:
@@ -32,7 +33,7 @@ def main():
     stop_button = rl.Rectangle(screen_width // 2 + 25, screen_height // 2 + 50, 100, 40)
     start_button = rl.Rectangle(stop_button.x - 150, screen_height // 2 + 50, 100, 40)
     lap_button =  rl.Rectangle(screen_width // 2 + 25, screen_height // 2 + 100, 100, 40)
-    record_button = rl.Rectangle(stop_button.x - 150, screen_height // 2 + 100, 100, 40)
+    reset_button = rl.Rectangle(stop_button.x - 150, screen_height // 2 + 100, 100, 40)
 
     while not rl.window_should_close() :
         # Calculate text size and position
@@ -46,6 +47,7 @@ def main():
         is_over_button = rl.check_collision_point_rec(mouse_point, stop_button)
         is_start_button = rl.check_collision_point_rec(mouse_point, start_button)
         is_lap_button = rl.check_collision_point_rec(mouse_point, lap_button)
+        is_reset_button = rl.check_collision_point_rec(mouse_point, reset_button)
 
         # Check for user input to stop the timer
         if is_over_button and rl.is_mouse_button_pressed(rl.MOUSE_LEFT_BUTTON):
@@ -54,13 +56,17 @@ def main():
         # Check for user input to start the timer
         if is_start_button and rl.is_mouse_button_pressed(rl.MOUSE_LEFT_BUTTON):
             continue_timer = True
+            start_time = time.time()
 
         # Check for user input to record lap time
         if is_lap_button and rl.is_mouse_button_pressed(rl.MOUSE_LEFT_BUTTON):
             with open(file_path, 'a') as file:
                 file.write(f"Lap Time: {elapsed_time:.1f} seconds\n")
-            
-            lap_num = lap_num + 1
+
+        if is_reset_button and rl.is_mouse_button_released(rl.MOUSE_LEFT_BUTTON):
+            elapsed_time = 0
+            start_time = 0
+            continue_timer = False
 
         # Draw
         rl.begin_drawing()
@@ -80,12 +86,12 @@ def main():
         rl.draw_text("Lap", int(lap_button.x) + 25, int(lap_button.y) + 10, int(20), rl.BLACK)
 
         # Draw record num button
-        rl.draw_rectangle_rec(record_button, rl.GRAY)
-        rl.draw_text(f"{lap_num}", int(record_button.x) + 40, int(record_button.y) + 10, int(20), rl.RED)
+        rl.draw_rectangle_rec(reset_button, rl.GRAY)
+        rl.draw_text("Reset", int(reset_button.x) + 25, int(reset_button.y) + 10, int(20), rl.RED)
 
         if continue_timer:  
             # Update timer
-            elapsed_time = rl.get_time()
+            elapsed_time = time.time() - start_time
 
         rl.end_drawing()
 

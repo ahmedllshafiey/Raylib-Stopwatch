@@ -1,1 +1,1 @@
-# Python GUI stopwatch in Raylib
+# Greedy Stopwatch
