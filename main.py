@@ -5,7 +5,7 @@ import time
 def main():
     # Initialization
     screen_width, screen_height = 350, 350
-    rl.init_window(screen_width, screen_height, "Greedy Stopwatch")
+    rl.init_window(screen_width, screen_height, "Raylib Stopwatch")
 
     # Set window icon
     rl.set_window_icon(rl.load_image("static/icon.png"))
@@ -15,9 +15,9 @@ def main():
     elapsed_time  = 0
     continue_timer = False
 
-    Date = datetime.datetime.now().strftime("%c")
-    formatted_date = Date.replace(" ", "-").replace(":", "-")
-    file_path = f"./data/{formatted_date}.txt"
+    Date = datetime.datetime.now().strftime("%X")
+    formatted_date = Date.replace(" ", ".").replace(":", ".")
+    file_path = f"./data/Lap Record {formatted_date}.txt"
 
     try:
         # Try to open the file for writing
@@ -52,11 +52,12 @@ def main():
         # Check for user input to stop the timer
         if is_over_button and rl.is_mouse_button_pressed(rl.MOUSE_LEFT_BUTTON):
             continue_timer = False
+            start_time = 0
 
         # Check for user input to start the timer
         if is_start_button and rl.is_mouse_button_pressed(rl.MOUSE_LEFT_BUTTON):
             continue_timer = True
-            start_time = time.time()
+            start_time = time.time() - elapsed_time
 
         # Check for user input to record lap time
         if is_lap_button and rl.is_mouse_button_pressed(rl.MOUSE_LEFT_BUTTON):
